@@ -177,6 +177,7 @@ namespace WeekTenHW
             this.dateTimePicker1.TabIndex = 15;
             this.dateTimePicker1.Value = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
             this.dateTimePicker1.Visible = false;
+            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
             // 
             // label5
             // 
@@ -208,6 +209,7 @@ namespace WeekTenHW
             this.dateTimePicker2.TabIndex = 17;
             this.dateTimePicker2.Value = new System.DateTime(2021, 5, 8, 0, 0, 0, 0);
             this.dateTimePicker2.Visible = false;
+            this.dateTimePicker2.ValueChanged += new System.EventHandler(this.dateTimePicker2_ValueChanged);
             // 
             // comboBox1
             // 
@@ -235,6 +237,7 @@ namespace WeekTenHW
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(604, 33);
             this.comboBox2.TabIndex = 20;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
             // Submitbtn
             // 
@@ -286,7 +289,7 @@ namespace WeekTenHW
             // 
             this.txt3.AutoSize = true;
             this.txt3.Font = new System.Drawing.Font("新細明體", 15F);
-            this.txt3.Location = new System.Drawing.Point(391, 393);
+            this.txt3.Location = new System.Drawing.Point(391, 397);
             this.txt3.Name = "txt3";
             this.txt3.Size = new System.Drawing.Size(119, 25);
             this.txt3.TabIndex = 25;
