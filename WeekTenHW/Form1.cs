@@ -16,9 +16,9 @@ namespace WeekTenHW
         {
             InitializeComponent();
         }
-        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
-            ChangeRadio(true);
+            Reset();
             LastResult();
         }
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
@@ -26,26 +26,9 @@ namespace WeekTenHW
             ChangeRadio(false);
             LastResult();
         }
-        private void Form1_Load(object sender, EventArgs e)
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
-            Reset();
-            LastResult();
-        }
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SelectCC();
-        }
-        private void Cancelbtn_Click(object sender, EventArgs e)
-        {
-            Reset();
-            LastResult();
-        }
-        private void Submitbtn_Click(object sender, EventArgs e)
-        {
-            LastResult();
-        }
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
+            ChangeRadio(true);
             LastResult();
         }
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
@@ -56,6 +39,26 @@ namespace WeekTenHW
         {
             LastResult();
         }
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SelectCC();
+        }
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LastResult();
+        }
+        private void Submitbtn_Click(object sender, EventArgs e)
+        {
+            LastResult();
+        }
+        private void Cancelbtn_Click(object sender, EventArgs e)
+        {
+            Reset();
+            LastResult();
+        }
+
+
+
         private void Reset()
         {
             radioButton1.Select();
