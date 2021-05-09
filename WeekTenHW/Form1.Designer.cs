@@ -216,12 +216,6 @@ namespace WeekTenHW
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.Font = new System.Drawing.Font("新細明體", 15F);
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "機車",
-            "貨車",
-            "大客車",
-            "自用小客車",
-            "營業用小客車"});
             this.comboBox1.Location = new System.Drawing.Point(396, 146);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(604, 33);
