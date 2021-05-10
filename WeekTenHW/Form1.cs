@@ -16,10 +16,12 @@ namespace WeekTenHW
         {
             InitializeComponent();
         }
+        //初始化
         private void Form1_Load(object sender, EventArgs e)
         {
             Reset();
         }
+        //換選項
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             ChangeRadio(false);
@@ -28,27 +30,29 @@ namespace WeekTenHW
         {
             ChangeRadio(true);
         }
-
+        //選擇車種帶入CC數
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             SelectCC();
         }
-
+        //送出表單顯示結果
         private void Submitbtn_Click(object sender, EventArgs e)
         {
             LastResult();
             ChangeResult(resultnum);
         }
+        //初始化
         private void Cancelbtn_Click(object sender, EventArgs e)
         {
             Reset();
         }
+        //跳到第一筆結果
         private void Topbtn_Click(object sender, EventArgs e)
         {
             resultnum = 0;
             ChangeResult(resultnum);
         }
-
+        //往前一筆結果
         private void Backbtn_Click(object sender, EventArgs e)
         {
             resultnum--;
@@ -56,7 +60,7 @@ namespace WeekTenHW
                 resultnum = 0;
             ChangeResult(resultnum);
         }
-
+        //往後一筆結果
         private void Nextbtn_Click(object sender, EventArgs e)
         {
             resultnum++;
@@ -64,12 +68,13 @@ namespace WeekTenHW
                 resultnum = lastresult.Count - 1;
             ChangeResult(resultnum);
         }
-
+        //跳到最後一筆結果
         private void Lastbtn_Click(object sender, EventArgs e)
         {
             resultnum = lastresult.Count - 1;
             ChangeResult(resultnum);
         }
+        //長按下一筆結果時能連續下一筆 Timer
         private void Nextbtn_MouseDown(object sender, MouseEventArgs e)
         {
             timerNEXT.Start();
@@ -99,6 +104,7 @@ namespace WeekTenHW
                 resultnum = lastresult.Count - 1;
             ChangeResult(resultnum);
         }
+        //長按上一筆結果時能連續上一筆 Timer
         private void Backbtn_MouseDown(object sender, MouseEventArgs e)
         {
             timerBACK.Start();
@@ -127,9 +133,10 @@ namespace WeekTenHW
                 resultnum = 0;
             ChangeResult(resultnum);
         }
-
+        //初始化方法
         private void Reset()
         {
+            //重製選項及欄位,並重新將假資料填入以及清空結果
             radioButton1.Select();
             comboBox1.Items.Clear();
             foreach (var item in _cars)
@@ -147,8 +154,10 @@ namespace WeekTenHW
             txt7.Text = "";
             txt8.Text = "";
         }
+        //天數選項交換
         private void ChangeRadio(bool change)
         {
+            //選擇範圍則將範圍的輸入框及文字帶出並設定初始值,反之則隱藏
             if (change)
             {
                 label5.Visible = true;
@@ -166,10 +175,12 @@ namespace WeekTenHW
                 dateTimePicker2.Visible = false;
             }
         }
+        //選取CC數
         private void SelectCC()
         {
+            //清空CC數的選單並重新取值
             comboBox2.Items.Clear();
-            string val = comboBox1.SelectedItem as string;
+            string val = comboBox1.SelectedItem as string;//以車種的選擇來查詢相對應的假資料並填入
             var carItem =
                 (from item in _cars
                  where string.Compare(item.CarName, val, true) == 0
@@ -180,40 +191,50 @@ namespace WeekTenHW
             }
             comboBox2.SelectedIndex = 0;
         }
+        //取得計算公式以及計算結果
         private string Cacu(string cartype, string carcc, int day, int year, out decimal totalmoney)
         {
+            //先取得選取車種
             var carType =
                 (from item in _cars
                  where string.Compare(item.CarName, cartype, true) == 0
                  select item.Cartax).FirstOrDefault();
-
+            //再取得選取CC數
             List<CarsTax> temp = carType as List<CarsTax>;
             var carTax =
                 (from item in temp
                  where string.Compare(item.CarCC, carcc, true) == 0
                  select item).FirstOrDefault();
-
+            //最後帶入公式並計算
             CarsTax tax = carTax as CarsTax;
             totalmoney = TotalMoney(tax.Tax, day, year);
             return $"{tax.Tax} × {day} / {year} = {Math.Floor(totalmoney)}元";
 
         }
+        //計算公式
         private decimal TotalMoney(int tax, int day, int year)
         {
+            //閏年除以366反之則除以365
             if (year == 366)
                 return tax * ((decimal)day / 366);
             else
                 return tax * ((decimal)day / 365);
         }
+        //最後的輸出表單
         private void LastResult()
         {
+            //清空字典及頁數歸零
             lastresult.Clear();
             resultnum = 0;
+            //一年的總額
             decimal totalmoney;
+            //選擇當年的話只計算當年份
             if (radioButton1.Checked)
             {
+                //取得當年的西元年,並多取一個數字型別的
                 string nowyear = DateTime.Now.ToString("yyyy");
                 int nowyearint = Convert.ToInt32(nowyear);
+                //判斷是否為閏年,並將結果加入字典
                 if (nowyearint % 4 == 0)
                 {
                     lastresult.Add(0, new List<string>() {
@@ -242,11 +263,15 @@ namespace WeekTenHW
             }
             else
             {
+                //所有年份的總額
                 decimal fulltotalmoney;
+                //判斷兩個日期的大小
                 if (dateTimePicker1.Value < dateTimePicker2.Value)
                 {
+                    //計算選取範圍內的總天數
                     TimeSpan ts = new TimeSpan(dateTimePicker2.Value.Ticks - dateTimePicker1.Value.Ticks);
                     int totaldays = (int)ts.TotalDays + 1;
+                    //傳入創造表單的函式並帶回結果
                     CreateResult(dateTimePicker1.Value.ToString("yyyy-MM-dd"), dateTimePicker2.Value.ToString("yyyy-MM-dd"), totaldays, out fulltotalmoney);
                     if (fulltotalmoney != 0)
                         txt8.Text = $"全部應納稅額：共{Math.Floor(fulltotalmoney)}元";
@@ -263,32 +288,46 @@ namespace WeekTenHW
 
             }
         }
+        //輸出表單的字典
         Dictionary<int, List<string>> lastresult = new Dictionary<int, List<string>>();
+        //表單頁數
         int resultnum = 0;
+        //創造表單(選取的範圍)
         private void CreateResult(string yearA, string yearB, int totaldays, out decimal fulltotalmoney)
         {
+            //先將總額設定為0
             fulltotalmoney = 0;
             decimal totalmoney;
+            //接取選取的頭尾年
             List<int> years = new List<int>();
+            //接取選取的所有年
             List<int> fullyears = new List<int>();
+            //選取的頭年
             int smallyear = Convert.ToInt32(Convert.ToDateTime(yearA).ToString("yyyy"));
+            //選取的尾年
             int bigyear = Convert.ToInt32(Convert.ToDateTime(yearB).ToString("yyyy"));
+            //頭尾年相減獲得中間有幾年
             int totalyear = bigyear - smallyear;
+            //判斷是否在同一年中,不是就進入計算,在同一年則直接計算
             if (totalyear > 0)
             {
+                //將頭尾年及所有年各別放入相應集合中
                 for (int i = smallyear; i <= bigyear; i++)
                 {
                     if (i == smallyear || i == bigyear)
                         years.Add(i);
                     fullyears.Add(i);
                 }
+                //跑所有年份次數的迴圈
                 for (int i = 0; i < fullyears.Count; i++)
                 {
-
+                    //頭年的情況
                     if (fullyears[i] == years[0])
                     {
+                        //計算所選日期到頭年的12月31日的天數
                         TimeSpan ts = new TimeSpan(Convert.ToDateTime($"{smallyear}-12-31").Ticks - Convert.ToDateTime(yearA).Ticks);
                         int thistotaldays = (int)ts.TotalDays + 1;
+                        //判斷閏年
                         if (fullyears[i] % 4 == 0)
                         {
                             lastresult.Add(i, new List<string>() {
@@ -299,6 +338,7 @@ namespace WeekTenHW
                                 $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 366, out totalmoney)}",
                                 $"應納稅額：共{Math.Floor(totalmoney)}元"
                             });
+                            //將總額加上計算結果
                             fulltotalmoney += totalmoney;
                         }
                         else
@@ -314,8 +354,10 @@ namespace WeekTenHW
                             fulltotalmoney += totalmoney;
                         }
                     }
+                    //尾年的情況
                     else if (fullyears[i] == years[1])
                     {
+                        //計算尾年的1月1日到所選日期的天數
                         TimeSpan ts = new TimeSpan(Convert.ToDateTime(yearB).Ticks - Convert.ToDateTime($"{bigyear}-01-01").Ticks);
                         int thistotaldays = (int)ts.TotalDays + 1;
                         if (fullyears[i] % 4 == 0)
@@ -343,6 +385,7 @@ namespace WeekTenHW
                             fulltotalmoney += totalmoney;
                         }
                     }
+                    //中間年的情況
                     else
                     {
                         if (fullyears[i] % 4 == 0)
@@ -374,8 +417,10 @@ namespace WeekTenHW
                 }
 
             }
+            //判斷是否在同一年中,不是就進入計算,在同一年則直接計算
             else
             {
+                //判斷閏年
                 if (smallyear % 4 == 0 || bigyear % 4 == 0)
                 {
                     lastresult.Add(0, new List<string>() {
@@ -402,8 +447,10 @@ namespace WeekTenHW
                 }
             }
         }
+        //輸出結果換頁
         private void ChangeResult(int nowresult)
         {
+            //將label改為當前頁數字典中的結果
             txt1.Text = lastresult[nowresult][0];
             txt2.Text = lastresult[nowresult][1];
             txt3.Text = lastresult[nowresult][2];
@@ -415,7 +462,7 @@ namespace WeekTenHW
 
 
 
-
+        //假資料集合部分
         private class Cars
         {
             public string CarName { get; set; }
