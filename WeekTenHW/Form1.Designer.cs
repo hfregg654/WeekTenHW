@@ -388,11 +388,11 @@ namespace WeekTenHW
             // 
             this.txt8.AutoSize = true;
             this.txt8.Font = new System.Drawing.Font("新細明體", 15F);
-            this.txt8.Location = new System.Drawing.Point(746, 550);
+            this.txt8.Location = new System.Drawing.Point(684, 550);
             this.txt8.Name = "txt8";
-            this.txt8.Size = new System.Drawing.Size(174, 25);
+            this.txt8.Size = new System.Drawing.Size(249, 25);
             this.txt8.TabIndex = 37;
-            this.txt8.Text = "總稅額：共0元";
+            this.txt8.Text = "全部應納稅額：共0元";
             // 
             // Form1
             // 

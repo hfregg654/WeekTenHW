@@ -190,14 +190,14 @@ namespace WeekTenHW
                     TimeSpan ts = new TimeSpan(dateTimePicker2.Value.Ticks - dateTimePicker1.Value.Ticks);
                     int totaldays = (int)ts.TotalDays + 1;
                     CreateResult(dateTimePicker1.Value.ToString("yyyy-MM-dd"), dateTimePicker2.Value.ToString("yyyy-MM-dd"), totaldays,out fulltotalmoney);
-                    txt8.Text = $"總稅額：共{Math.Floor(fulltotalmoney)}元";
+                    txt8.Text = $"全部應納稅額：共{Math.Floor(fulltotalmoney)}元";
                 }
                 else
                 {
                     TimeSpan ts = new TimeSpan(dateTimePicker1.Value.Ticks - dateTimePicker2.Value.Ticks);
                     int totaldays = (int)ts.TotalDays + 1;
                     CreateResult(dateTimePicker2.Value.ToString("yyyy-MM-dd"), dateTimePicker1.Value.ToString("yyyy-MM-dd"), totaldays,out fulltotalmoney);
-                    txt8.Text = $"總稅額：共{Math.Floor(fulltotalmoney)}元";
+                    txt8.Text = $"全部應納稅額：共{Math.Floor(fulltotalmoney)}元";
                 }
 
             }
