@@ -242,7 +242,7 @@ namespace WeekTenHW
                         $"計算天數：366天",
                         $"汽缸CC數：{comboBox2.SelectedItem}",
                         $"用途：{comboBox1.SelectedItem}",
-                        $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 366, 366, out totalmoney)}",
+                        $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 366, 366, out totalmoney)}",
                         $"應納稅額：共{Math.Floor(totalmoney)}元"
                     });
                     txt8.Text = "";
@@ -254,7 +254,7 @@ namespace WeekTenHW
                         $"計算天數：365天",
                         $"汽缸CC數：{comboBox2.SelectedItem}",
                         $"用途：{comboBox1.SelectedItem}",
-                        $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 365, 365, out totalmoney)}",
+                        $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 365, 365, out totalmoney)}",
                         $"應納稅額：共{Math.Floor(totalmoney)}元"
                     });
                     txt8.Text = "";
@@ -335,7 +335,7 @@ namespace WeekTenHW
                                 $"計算天數：{thistotaldays}天",
                                 $"汽缸CC數：{comboBox2.SelectedItem}",
                                 $"用途：{comboBox1.SelectedItem}",
-                                $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 366, out totalmoney)}",
+                                $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 366, out totalmoney)}",
                                 $"應納稅額：共{Math.Floor(totalmoney)}元"
                             });
                             //將總額加上計算結果
@@ -348,7 +348,7 @@ namespace WeekTenHW
                                 $"計算天數：{thistotaldays}天",
                                 $"汽缸CC數：{comboBox2.SelectedItem}",
                                 $"用途：{comboBox1.SelectedItem}",
-                                $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 365, out totalmoney)}",
+                                $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 365, out totalmoney)}",
                                 $"應納稅額：共{Math.Floor(totalmoney)}元"
                             });
                             fulltotalmoney += totalmoney;
@@ -367,7 +367,7 @@ namespace WeekTenHW
                                 $"計算天數：{thistotaldays}天",
                                 $"汽缸CC數：{comboBox2.SelectedItem}",
                                 $"用途：{comboBox1.SelectedItem}",
-                                $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 366, out totalmoney)}",
+                                $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 366, out totalmoney)}",
                                 $"應納稅額：共{Math.Floor(totalmoney)}元"
                             });
                             fulltotalmoney += totalmoney;
@@ -379,7 +379,7 @@ namespace WeekTenHW
                                 $"計算天數：{thistotaldays}天",
                                 $"汽缸CC數：{comboBox2.SelectedItem}",
                                 $"用途：{comboBox1.SelectedItem}",
-                                $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 365, out totalmoney)}",
+                                $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 365, out totalmoney)}",
                                 $"應納稅額：共{Math.Floor(totalmoney)}元"
                             });
                             fulltotalmoney += totalmoney;
@@ -395,7 +395,7 @@ namespace WeekTenHW
                                 $"計算天數：366天",
                                 $"汽缸CC數：{comboBox2.SelectedItem}",
                                 $"用途：{comboBox1.SelectedItem}",
-                                $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 366, 366, out totalmoney)}",
+                                $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 366, 366, out totalmoney)}",
                                 $"應納稅額：共{Math.Floor(totalmoney)}元"
                             });
                             fulltotalmoney += totalmoney;
@@ -407,7 +407,7 @@ namespace WeekTenHW
                                 $"計算天數：365天",
                                 $"汽缸CC數：{comboBox2.SelectedItem}",
                                 $"用途：{comboBox1.SelectedItem}",
-                                $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 365, 365, out totalmoney)}",
+                                $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 365, 365, out totalmoney)}",
                                 $"應納稅額：共{Math.Floor(totalmoney)}元"
                             });
                             fulltotalmoney += totalmoney;
@@ -428,7 +428,7 @@ namespace WeekTenHW
                         $"計算天數：{totaldays}天",
                         $"汽缸CC數：{comboBox2.SelectedItem}",
                         $"用途：{comboBox1.SelectedItem}",
-                        $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, totaldays, 366, out totalmoney)}",
+                        $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, totaldays, 366, out totalmoney)}",
                         $"應納稅額：共{Math.Floor(totalmoney)}元"
                     });
                     txt8.Text = "";
@@ -440,7 +440,7 @@ namespace WeekTenHW
                         $"計算天數：{totaldays}天",
                         $"汽缸CC數：{comboBox2.SelectedItem}",
                         $"用途：{comboBox1.SelectedItem}",
-                        $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, totaldays, 365, out totalmoney)}",
+                        $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, totaldays, 365, out totalmoney)}",
                         $"應納稅額：共{Math.Floor(totalmoney)}元"
                     });
                     txt8.Text = "";
