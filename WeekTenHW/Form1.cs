@@ -75,6 +75,7 @@ namespace WeekTenHW
         private void Reset()
         {
             radioButton1.Select();
+            comboBox1.Items.Clear();
             foreach (var item in _cars)
             {
                 comboBox1.Items.Add(item.CarName);
