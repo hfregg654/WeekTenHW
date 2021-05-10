@@ -29,6 +29,7 @@ namespace WeekTenHW
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
@@ -59,6 +60,8 @@ namespace WeekTenHW
             this.Lastbtn = new System.Windows.Forms.Button();
             this.txt7 = new System.Windows.Forms.Label();
             this.txt8 = new System.Windows.Forms.Label();
+            this.timerNEXT = new System.Windows.Forms.Timer(this.components);
+            this.timerBACK = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -334,6 +337,8 @@ namespace WeekTenHW
             this.Nextbtn.Text = ">";
             this.Nextbtn.UseVisualStyleBackColor = false;
             this.Nextbtn.Click += new System.EventHandler(this.Nextbtn_Click);
+            this.Nextbtn.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Nextbtn_MouseDown);
+            this.Nextbtn.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Nextbtn_MouseUp);
             // 
             // Topbtn
             // 
@@ -360,6 +365,8 @@ namespace WeekTenHW
             this.Backbtn.Text = "<";
             this.Backbtn.UseVisualStyleBackColor = false;
             this.Backbtn.Click += new System.EventHandler(this.Backbtn_Click);
+            this.Backbtn.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Backbtn_MouseDown);
+            this.Backbtn.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Backbtn_MouseUp);
             // 
             // Lastbtn
             // 
@@ -393,6 +400,16 @@ namespace WeekTenHW
             this.txt8.Size = new System.Drawing.Size(249, 25);
             this.txt8.TabIndex = 37;
             this.txt8.Text = "全部應納稅額：共0元";
+            // 
+            // timerNEXT
+            // 
+            this.timerNEXT.Interval = 1000;
+            this.timerNEXT.Tick += new System.EventHandler(this.timerNEXT_Tick);
+            // 
+            // timerBACK
+            // 
+            this.timerBACK.Interval = 1000;
+            this.timerBACK.Tick += new System.EventHandler(this.timerBACK_Tick);
             // 
             // Form1
             // 
@@ -472,6 +489,8 @@ namespace WeekTenHW
         private System.Windows.Forms.Button Lastbtn;
         private System.Windows.Forms.Label txt7;
         private System.Windows.Forms.Label txt8;
+        private System.Windows.Forms.Timer timerNEXT;
+        private System.Windows.Forms.Timer timerBACK;
     }
 }
 

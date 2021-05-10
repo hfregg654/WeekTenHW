@@ -70,7 +70,63 @@ namespace WeekTenHW
             resultnum = lastresult.Count - 1;
             ChangeResult(resultnum);
         }
+        private void Nextbtn_MouseDown(object sender, MouseEventArgs e)
+        {
+            timerNEXT.Start();
+        }
+        private void Nextbtn_MouseUp(object sender, MouseEventArgs e)
+        {
+            timerNEXT.Stop();
+            timerNEXT.Interval = 1000;
+        }
+        private void timerNEXT_Tick(object sender, EventArgs e)
+        {
 
+            if (timerNEXT.Interval - 100 <= 100)
+            {
+                if (timerNEXT.Interval - 10 <= 10)
+                {
+                    timerNEXT.Interval = 10;
+                }
+                else
+                    timerNEXT.Interval -= 10;
+            }
+            else
+                timerNEXT.Interval -= 100;
+
+            resultnum++;
+            if (resultnum > lastresult.Count - 1)
+                resultnum = lastresult.Count - 1;
+            ChangeResult(resultnum);
+        }
+        private void Backbtn_MouseDown(object sender, MouseEventArgs e)
+        {
+            timerBACK.Start();
+        }
+        private void Backbtn_MouseUp(object sender, MouseEventArgs e)
+        {
+            timerBACK.Stop();
+            timerBACK.Interval = 1000;
+        }
+        private void timerBACK_Tick(object sender, EventArgs e)
+        {
+            if (timerBACK.Interval - 100 <= 100)
+            {
+                if (timerBACK.Interval - 10 <= 10)
+                {
+                    timerBACK.Interval = 10;
+                }
+                else
+                    timerBACK.Interval -= 10;
+            }
+            else
+                timerBACK.Interval -= 100;
+
+            resultnum--;
+            if (resultnum < 0)
+                resultnum = 0;
+            ChangeResult(resultnum);
+        }
 
         private void Reset()
         {
@@ -190,14 +246,14 @@ namespace WeekTenHW
                 {
                     TimeSpan ts = new TimeSpan(dateTimePicker2.Value.Ticks - dateTimePicker1.Value.Ticks);
                     int totaldays = (int)ts.TotalDays + 1;
-                    CreateResult(dateTimePicker1.Value.ToString("yyyy-MM-dd"), dateTimePicker2.Value.ToString("yyyy-MM-dd"), totaldays,out fulltotalmoney);
+                    CreateResult(dateTimePicker1.Value.ToString("yyyy-MM-dd"), dateTimePicker2.Value.ToString("yyyy-MM-dd"), totaldays, out fulltotalmoney);
                     txt8.Text = $"全部應納稅額：共{Math.Floor(fulltotalmoney)}元";
                 }
                 else
                 {
                     TimeSpan ts = new TimeSpan(dateTimePicker1.Value.Ticks - dateTimePicker2.Value.Ticks);
                     int totaldays = (int)ts.TotalDays + 1;
-                    CreateResult(dateTimePicker2.Value.ToString("yyyy-MM-dd"), dateTimePicker1.Value.ToString("yyyy-MM-dd"), totaldays,out fulltotalmoney);
+                    CreateResult(dateTimePicker2.Value.ToString("yyyy-MM-dd"), dateTimePicker1.Value.ToString("yyyy-MM-dd"), totaldays, out fulltotalmoney);
                     txt8.Text = $"全部應納稅額：共{Math.Floor(fulltotalmoney)}元";
                 }
 
@@ -205,7 +261,7 @@ namespace WeekTenHW
         }
         Dictionary<int, List<string>> lastresult = new Dictionary<int, List<string>>();
         int resultnum = 0;
-        private void CreateResult(string yearA, string yearB, int totaldays ,out decimal fulltotalmoney)
+        private void CreateResult(string yearA, string yearB, int totaldays, out decimal fulltotalmoney)
         {
             fulltotalmoney = 0;
             decimal totalmoney;
@@ -350,7 +406,7 @@ namespace WeekTenHW
             txt4.Text = lastresult[nowresult][3];
             txt5.Text = lastresult[nowresult][4];
             txt6.Text = lastresult[nowresult][5];
-            txt7.Text = $"{nowresult+1}/{lastresult.Count}頁";
+            txt7.Text = $"{nowresult + 1}/{lastresult.Count}頁";
         }
 
 
@@ -467,6 +523,9 @@ namespace WeekTenHW
                 }
             },
         };
+
+
+
 
 
     }
