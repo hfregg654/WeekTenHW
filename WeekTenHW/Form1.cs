@@ -122,7 +122,7 @@ namespace WeekTenHW
             }
             comboBox2.SelectedIndex = 0;
         }
-        private string Cacu(string cartype, string carcc, int day, int year, out int totalmoney)
+        private string Cacu(string cartype, string carcc, int day, int year, out decimal totalmoney)
         {
             var carType =
                 (from item in _cars
@@ -137,21 +137,21 @@ namespace WeekTenHW
 
             CarsTax tax = carTax as CarsTax;
             totalmoney = TotalMoney(tax.Tax, day, year);
-            return $"{tax.Tax} × {day} / {year} = {totalmoney}元";
+            return $"{tax.Tax} × {day} / {year} = {Math.Floor(totalmoney)}元";
 
         }
-        private int TotalMoney(int tax, int day, int year)
+        private decimal TotalMoney(int tax, int day, int year)
         {
             if (year == 366)
-                return Convert.ToInt32(Math.Floor(tax * ((decimal)day / 366)));
+                return tax * ((decimal)day / 366);
             else
-                return Convert.ToInt32(Math.Floor(tax * ((decimal)day / 365)));
+                return tax * ((decimal)day / 365);
         }
         private void LastResult()
         {
             lastresult.Clear();
             resultnum = 0;
-            int totalmoney;
+            decimal totalmoney;
             if (radioButton1.Checked)
             {
                 string nowyear = DateTime.Now.ToString("yyyy");
@@ -164,7 +164,7 @@ namespace WeekTenHW
                         $"汽缸CC數：{comboBox2.SelectedItem}",
                         $"用途：{comboBox1.SelectedItem}",
                         $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 366, 366, out totalmoney)}",
-                        $"應納稅額：共{totalmoney}元"
+                        $"應納稅額：共{Math.Floor(totalmoney)}元"
                     });
                     txt8.Text = "";
                 }
@@ -176,7 +176,7 @@ namespace WeekTenHW
                         $"汽缸CC數：{comboBox2.SelectedItem}",
                         $"用途：{comboBox1.SelectedItem}",
                         $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 365, 365, out totalmoney)}",
-                        $"應納稅額：共{totalmoney}元"
+                        $"應納稅額：共{Math.Floor(totalmoney)}元"
                     });
                     txt8.Text = "";
                 }
@@ -184,30 +184,30 @@ namespace WeekTenHW
             }
             else
             {
-                int fulltotalmoney;
+                decimal fulltotalmoney;
                 if (dateTimePicker1.Value < dateTimePicker2.Value)
                 {
                     TimeSpan ts = new TimeSpan(dateTimePicker2.Value.Ticks - dateTimePicker1.Value.Ticks);
                     int totaldays = (int)ts.TotalDays + 1;
                     CreateResult(dateTimePicker1.Value.ToString("yyyy-MM-dd"), dateTimePicker2.Value.ToString("yyyy-MM-dd"), totaldays,out fulltotalmoney);
-                    txt8.Text = $"總稅額：共{fulltotalmoney}元";
+                    txt8.Text = $"總稅額：共{Math.Floor(fulltotalmoney)}元";
                 }
                 else
                 {
                     TimeSpan ts = new TimeSpan(dateTimePicker1.Value.Ticks - dateTimePicker2.Value.Ticks);
                     int totaldays = (int)ts.TotalDays + 1;
                     CreateResult(dateTimePicker2.Value.ToString("yyyy-MM-dd"), dateTimePicker1.Value.ToString("yyyy-MM-dd"), totaldays,out fulltotalmoney);
-                    txt8.Text = $"總稅額：共{fulltotalmoney}元";
+                    txt8.Text = $"總稅額：共{Math.Floor(fulltotalmoney)}元";
                 }
 
             }
         }
         Dictionary<int, List<string>> lastresult = new Dictionary<int, List<string>>();
         int resultnum = 0;
-        private void CreateResult(string yearA, string yearB, int totaldays ,out int fulltotalmoney)
+        private void CreateResult(string yearA, string yearB, int totaldays ,out decimal fulltotalmoney)
         {
             fulltotalmoney = 0;
-            int totalmoney;
+            decimal totalmoney;
             List<int> years = new List<int>();
             List<int> fullyears = new List<int>();
             int smallyear = Convert.ToInt32(Convert.ToDateTime(yearA).ToString("yyyy"));
@@ -236,7 +236,7 @@ namespace WeekTenHW
                                 $"汽缸CC數：{comboBox2.SelectedItem}",
                                 $"用途：{comboBox1.SelectedItem}",
                                 $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 366, out totalmoney)}",
-                                $"應納稅額：共{totalmoney}元"
+                                $"應納稅額：共{Math.Floor(totalmoney)}元"
                             });
                             fulltotalmoney += totalmoney;
                         }
@@ -248,7 +248,7 @@ namespace WeekTenHW
                                 $"汽缸CC數：{comboBox2.SelectedItem}",
                                 $"用途：{comboBox1.SelectedItem}",
                                 $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 365, out totalmoney)}",
-                                $"應納稅額：共{totalmoney}元"
+                                $"應納稅額：共{Math.Floor(totalmoney)}元"
                             });
                             fulltotalmoney += totalmoney;
                         }
@@ -265,7 +265,7 @@ namespace WeekTenHW
                                 $"汽缸CC數：{comboBox2.SelectedItem}",
                                 $"用途：{comboBox1.SelectedItem}",
                                 $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 366, out totalmoney)}",
-                                $"應納稅額：共{totalmoney}元"
+                                $"應納稅額：共{Math.Floor(totalmoney)}元"
                             });
                             fulltotalmoney += totalmoney;
                         }
@@ -277,7 +277,7 @@ namespace WeekTenHW
                                 $"汽缸CC數：{comboBox2.SelectedItem}",
                                 $"用途：{comboBox1.SelectedItem}",
                                 $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 365, out totalmoney)}",
-                                $"應納稅額：共{totalmoney}元"
+                                $"應納稅額：共{Math.Floor(totalmoney)}元"
                             });
                             fulltotalmoney += totalmoney;
                         }
@@ -292,7 +292,7 @@ namespace WeekTenHW
                                 $"汽缸CC數：{comboBox2.SelectedItem}",
                                 $"用途：{comboBox1.SelectedItem}",
                                 $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 366, 366, out totalmoney)}",
-                                $"應納稅額：共{totalmoney}元"
+                                $"應納稅額：共{Math.Floor(totalmoney)}元"
                             });
                             fulltotalmoney += totalmoney;
                         }
@@ -304,7 +304,7 @@ namespace WeekTenHW
                                 $"汽缸CC數：{comboBox2.SelectedItem}",
                                 $"用途：{comboBox1.SelectedItem}",
                                 $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 365, 365, out totalmoney)}",
-                                $"應納稅額：共{totalmoney}元"
+                                $"應納稅額：共{Math.Floor(totalmoney)}元"
                             });
                             fulltotalmoney += totalmoney;
                         }
@@ -323,7 +323,7 @@ namespace WeekTenHW
                         $"汽缸CC數：{comboBox2.SelectedItem}",
                         $"用途：{comboBox1.SelectedItem}",
                         $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, totaldays, 366, out totalmoney)}",
-                        $"應納稅額：共{totalmoney}元"
+                        $"應納稅額：共{Math.Floor(totalmoney)}元"
                     });
                     txt8.Text = "";
                 }
@@ -335,7 +335,7 @@ namespace WeekTenHW
                         $"汽缸CC數：{comboBox2.SelectedItem}",
                         $"用途：{comboBox1.SelectedItem}",
                         $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, totaldays, 365, out totalmoney)}",
-                        $"應納稅額：共{totalmoney}元"
+                        $"應納稅額：共{Math.Floor(totalmoney)}元"
                     });
                     txt8.Text = "";
                 }
