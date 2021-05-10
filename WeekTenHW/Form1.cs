@@ -155,6 +155,7 @@ namespace WeekTenHW
                 label6.Visible = true;
                 dateTimePicker1.Visible = true;
                 dateTimePicker2.Visible = true;
+                dateTimePicker1.Value = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
                 dateTimePicker2.Value = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
             }
             else
@@ -247,14 +248,17 @@ namespace WeekTenHW
                     TimeSpan ts = new TimeSpan(dateTimePicker2.Value.Ticks - dateTimePicker1.Value.Ticks);
                     int totaldays = (int)ts.TotalDays + 1;
                     CreateResult(dateTimePicker1.Value.ToString("yyyy-MM-dd"), dateTimePicker2.Value.ToString("yyyy-MM-dd"), totaldays, out fulltotalmoney);
-                    txt8.Text = $"全部應納稅額：共{Math.Floor(fulltotalmoney)}元";
+                    if (fulltotalmoney != 0)
+                        txt8.Text = $"全部應納稅額：共{Math.Floor(fulltotalmoney)}元";
+
                 }
                 else
                 {
                     TimeSpan ts = new TimeSpan(dateTimePicker1.Value.Ticks - dateTimePicker2.Value.Ticks);
                     int totaldays = (int)ts.TotalDays + 1;
                     CreateResult(dateTimePicker2.Value.ToString("yyyy-MM-dd"), dateTimePicker1.Value.ToString("yyyy-MM-dd"), totaldays, out fulltotalmoney);
-                    txt8.Text = $"全部應納稅額：共{Math.Floor(fulltotalmoney)}元";
+                    if (fulltotalmoney != 0)
+                        txt8.Text = $"全部應納稅額：共{Math.Floor(fulltotalmoney)}元";
                 }
 
             }
