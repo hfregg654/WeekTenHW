@@ -23,38 +23,53 @@ namespace WeekTenHW
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             ChangeRadio(false);
-            LastResult();
         }
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
             ChangeRadio(true);
-            LastResult();
         }
-        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
-        {
-            LastResult();
-        }
-        private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
-        {
-            LastResult();
-        }
+
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             SelectCC();
         }
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            LastResult();
-        }
+
         private void Submitbtn_Click(object sender, EventArgs e)
         {
             LastResult();
+            ChangeResult(resultnum);
         }
         private void Cancelbtn_Click(object sender, EventArgs e)
         {
             Reset();
         }
+        private void Topbtn_Click(object sender, EventArgs e)
+        {
+            resultnum = 0;
+            ChangeResult(resultnum);
+        }
 
+        private void Backbtn_Click(object sender, EventArgs e)
+        {
+            resultnum--;
+            if (resultnum < 0)
+                resultnum = 0;
+            ChangeResult(resultnum);
+        }
+
+        private void Nextbtn_Click(object sender, EventArgs e)
+        {
+            resultnum++;
+            if (resultnum > lastresult.Count - 1)
+                resultnum = lastresult.Count - 1;
+            ChangeResult(resultnum);
+        }
+
+        private void Lastbtn_Click(object sender, EventArgs e)
+        {
+            resultnum = lastresult.Count - 1;
+            ChangeResult(resultnum);
+        }
 
 
         private void Reset()
@@ -66,7 +81,14 @@ namespace WeekTenHW
             }
             comboBox1.SelectedIndex = 0;
             SelectCC();
-            LastResult();
+            txt1.Text = "";
+            txt2.Text = "";
+            txt3.Text = "";
+            txt4.Text = "";
+            txt5.Text = "";
+            txt6.Text = "";
+            txt7.Text = "";
+            txt8.Text = "";
         }
         private void ChangeRadio(bool change)
         {
@@ -100,30 +122,35 @@ namespace WeekTenHW
             }
             comboBox2.SelectedIndex = 0;
         }
-        private string Cacu(string cartype, string carcc, int day, out int totalmoney)
+        private string Cacu(string cartype, string carcc, int day, int year, out int totalmoney)
         {
             var carType =
                 (from item in _cars
-                where string.Compare(item.CarName, cartype, true) == 0
-                select item.Cartax).FirstOrDefault();
+                 where string.Compare(item.CarName, cartype, true) == 0
+                 select item.Cartax).FirstOrDefault();
 
             List<CarsTax> temp = carType as List<CarsTax>;
-            var carTax=
+            var carTax =
                 (from item in temp
-                where string.Compare(item.CarCC, carcc, true) == 0
-                select item).FirstOrDefault();
+                 where string.Compare(item.CarCC, carcc, true) == 0
+                 select item).FirstOrDefault();
 
             CarsTax tax = carTax as CarsTax;
-            totalmoney = TotalMoney(tax.Tax, day);
-            return $"{tax.Tax} × {day} / 365 = {totalmoney}元";
+            totalmoney = TotalMoney(tax.Tax, day, year);
+            return $"{tax.Tax} × {day} / {year} = {totalmoney}元";
 
         }
-        private int TotalMoney(int tax, int day)
+        private int TotalMoney(int tax, int day, int year)
         {
-            return Convert.ToInt32(Math.Floor(tax * ((decimal)day / 365)));
+            if (year == 366)
+                return Convert.ToInt32(Math.Floor(tax * ((decimal)day / 366)));
+            else
+                return Convert.ToInt32(Math.Floor(tax * ((decimal)day / 365)));
         }
         private void LastResult()
         {
+            lastresult.Clear();
+            resultnum = 0;
             int totalmoney;
             if (radioButton1.Checked)
             {
@@ -131,52 +158,201 @@ namespace WeekTenHW
                 int nowyearint = Convert.ToInt32(nowyear);
                 if (nowyearint % 4 == 0)
                 {
-                    txt1.Text = $"使用期間：{nowyear}-01-01~{nowyear}-12-31";
-                    txt2.Text = $"計算天數：366天";
-                    txt3.Text = $"汽缸CC數：{comboBox2.SelectedItem}";
-                    txt4.Text = $"用途：{comboBox1.SelectedItem}";
-                    txt5.Text = $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 366, out totalmoney)}";
-                    txt6.Text = $"應納稅額：共{totalmoney}元";
+                    lastresult.Add(0, new List<string>() {
+                        $"使用期間：{nowyear}-01-01~{nowyear}-12-31",
+                        $"計算天數：366天",
+                        $"汽缸CC數：{comboBox2.SelectedItem}",
+                        $"用途：{comboBox1.SelectedItem}",
+                        $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 366, 366, out totalmoney)}",
+                        $"應納稅額：共{totalmoney}元"
+                    });
+                    txt8.Text = "";
                 }
                 else
                 {
-                    txt1.Text = $"使用期間：{nowyear}-01-01~{nowyear}-12-31";
-                    txt2.Text = $"計算天數：365天";
-                    txt3.Text = $"汽缸CC數：{comboBox2.SelectedItem}";
-                    txt4.Text = $"用途：{comboBox1.SelectedItem}";
-                    txt5.Text = $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 365, out totalmoney)}";
-                    txt6.Text = $"應納稅額：共{totalmoney}元";
+                    lastresult.Add(0, new List<string>() {
+                        $"使用期間：{nowyear}-01-01~{nowyear}-12-31",
+                        $"計算天數：365天",
+                        $"汽缸CC數：{comboBox2.SelectedItem}",
+                        $"用途：{comboBox1.SelectedItem}",
+                        $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 365, 365, out totalmoney)}",
+                        $"應納稅額：共{totalmoney}元"
+                    });
+                    txt8.Text = "";
                 }
 
             }
             else
             {
-
+                int fulltotalmoney;
                 if (dateTimePicker1.Value < dateTimePicker2.Value)
                 {
                     TimeSpan ts = new TimeSpan(dateTimePicker2.Value.Ticks - dateTimePicker1.Value.Ticks);
                     int totaldays = (int)ts.TotalDays + 1;
-                    txt1.Text = $"使用期間：{dateTimePicker1.Value.ToString("yyyy-MM-dd")}~{dateTimePicker2.Value.ToString("yyyy-MM-dd")}";
-                    txt2.Text = $"計算天數：{totaldays}天";
-                    txt3.Text = $"汽缸CC數：{comboBox2.SelectedItem}";
-                    txt4.Text = $"用途：{comboBox1.SelectedItem}";
-                    txt5.Text = $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, totaldays, out totalmoney)}";
-                    txt6.Text = $"應納稅額：共{totalmoney}元";
+                    CreateResult(dateTimePicker1.Value.ToString("yyyy-MM-dd"), dateTimePicker2.Value.ToString("yyyy-MM-dd"), totaldays,out fulltotalmoney);
+                    txt8.Text = $"總稅額：共{fulltotalmoney}元";
                 }
                 else
                 {
                     TimeSpan ts = new TimeSpan(dateTimePicker1.Value.Ticks - dateTimePicker2.Value.Ticks);
                     int totaldays = (int)ts.TotalDays + 1;
-                    txt1.Text = $"使用期間：{dateTimePicker2.Value.ToString("yyyy-MM-dd")}~{dateTimePicker1.Value.ToString("yyyy-MM-dd")}";
-                    txt2.Text = $"計算天數：{totaldays}天";
-                    txt3.Text = $"汽缸CC數：{comboBox2.SelectedItem}";
-                    txt4.Text = $"用途：{comboBox1.SelectedItem}";
-                    txt5.Text = $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, totaldays, out totalmoney)}";
-                    txt6.Text = $"應納稅額：共{totalmoney}元";
+                    CreateResult(dateTimePicker2.Value.ToString("yyyy-MM-dd"), dateTimePicker1.Value.ToString("yyyy-MM-dd"), totaldays,out fulltotalmoney);
+                    txt8.Text = $"總稅額：共{fulltotalmoney}元";
                 }
 
             }
         }
+        Dictionary<int, List<string>> lastresult = new Dictionary<int, List<string>>();
+        int resultnum = 0;
+        private void CreateResult(string yearA, string yearB, int totaldays ,out int fulltotalmoney)
+        {
+            fulltotalmoney = 0;
+            int totalmoney;
+            List<int> years = new List<int>();
+            List<int> fullyears = new List<int>();
+            int smallyear = Convert.ToInt32(Convert.ToDateTime(yearA).ToString("yyyy"));
+            int bigyear = Convert.ToInt32(Convert.ToDateTime(yearB).ToString("yyyy"));
+            int totalyear = bigyear - smallyear;
+            if (totalyear > 0)
+            {
+                for (int i = smallyear; i <= bigyear; i++)
+                {
+                    if (i == smallyear || i == bigyear)
+                        years.Add(i);
+                    fullyears.Add(i);
+                }
+                for (int i = 0; i < fullyears.Count; i++)
+                {
+
+                    if (fullyears[i] == years[0])
+                    {
+                        TimeSpan ts = new TimeSpan(Convert.ToDateTime($"{smallyear}-12-31").Ticks - Convert.ToDateTime(yearA).Ticks);
+                        int thistotaldays = (int)ts.TotalDays + 1;
+                        if (fullyears[i] % 4 == 0)
+                        {
+                            lastresult.Add(i, new List<string>() {
+                                $"使用期間：{yearA}~{fullyears[i]}-12-31",
+                                $"計算天數：{thistotaldays}天",
+                                $"汽缸CC數：{comboBox2.SelectedItem}",
+                                $"用途：{comboBox1.SelectedItem}",
+                                $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 366, out totalmoney)}",
+                                $"應納稅額：共{totalmoney}元"
+                            });
+                            fulltotalmoney += totalmoney;
+                        }
+                        else
+                        {
+                            lastresult.Add(i, new List<string>() {
+                                $"使用期間：{yearA}~{fullyears[i]}-12-31",
+                                $"計算天數：{thistotaldays}天",
+                                $"汽缸CC數：{comboBox2.SelectedItem}",
+                                $"用途：{comboBox1.SelectedItem}",
+                                $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 365, out totalmoney)}",
+                                $"應納稅額：共{totalmoney}元"
+                            });
+                            fulltotalmoney += totalmoney;
+                        }
+                    }
+                    else if (fullyears[i] == years[1])
+                    {
+                        TimeSpan ts = new TimeSpan(Convert.ToDateTime(yearB).Ticks - Convert.ToDateTime($"{bigyear}-01-01").Ticks);
+                        int thistotaldays = (int)ts.TotalDays + 1;
+                        if (fullyears[i] % 4 == 0)
+                        {
+                            lastresult.Add(i, new List<string>() {
+                                $"使用期間：{fullyears[i]}-01-01~{yearB}",
+                                $"計算天數：{thistotaldays}天",
+                                $"汽缸CC數：{comboBox2.SelectedItem}",
+                                $"用途：{comboBox1.SelectedItem}",
+                                $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 366, out totalmoney)}",
+                                $"應納稅額：共{totalmoney}元"
+                            });
+                            fulltotalmoney += totalmoney;
+                        }
+                        else
+                        {
+                            lastresult.Add(i, new List<string>() {
+                                $"使用期間：{fullyears[i]}-01-01~{yearB}",
+                                $"計算天數：{thistotaldays}天",
+                                $"汽缸CC數：{comboBox2.SelectedItem}",
+                                $"用途：{comboBox1.SelectedItem}",
+                                $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 365, out totalmoney)}",
+                                $"應納稅額：共{totalmoney}元"
+                            });
+                            fulltotalmoney += totalmoney;
+                        }
+                    }
+                    else
+                    {
+                        if (fullyears[i] % 4 == 0)
+                        {
+                            lastresult.Add(i, new List<string>() {
+                                $"使用期間：{fullyears[i]}-01-01~{fullyears[i]}-12-31",
+                                $"計算天數：366天",
+                                $"汽缸CC數：{comboBox2.SelectedItem}",
+                                $"用途：{comboBox1.SelectedItem}",
+                                $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 366, 366, out totalmoney)}",
+                                $"應納稅額：共{totalmoney}元"
+                            });
+                            fulltotalmoney += totalmoney;
+                        }
+                        else
+                        {
+                            lastresult.Add(i, new List<string>() {
+                                $"使用期間：{fullyears[i]}-01-01~{fullyears[i]}-12-31",
+                                $"計算天數：365天",
+                                $"汽缸CC數：{comboBox2.SelectedItem}",
+                                $"用途：{comboBox1.SelectedItem}",
+                                $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 365, 365, out totalmoney)}",
+                                $"應納稅額：共{totalmoney}元"
+                            });
+                            fulltotalmoney += totalmoney;
+                        }
+                    }
+
+                }
+
+            }
+            else
+            {
+                if (smallyear % 4 == 0 || bigyear % 4 == 0)
+                {
+                    lastresult.Add(0, new List<string>() {
+                        $"使用期間：{yearA}~{yearB}",
+                        $"計算天數：{totaldays}天",
+                        $"汽缸CC數：{comboBox2.SelectedItem}",
+                        $"用途：{comboBox1.SelectedItem}",
+                        $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, totaldays, 366, out totalmoney)}",
+                        $"應納稅額：共{totalmoney}元"
+                    });
+                    txt8.Text = "";
+                }
+                else
+                {
+                    lastresult.Add(0, new List<string>() {
+                        $"使用期間：{yearA}~{yearB}",
+                        $"計算天數：{totaldays}天",
+                        $"汽缸CC數：{comboBox2.SelectedItem}",
+                        $"用途：{comboBox1.SelectedItem}",
+                        $"計算公式：計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, totaldays, 365, out totalmoney)}",
+                        $"應納稅額：共{totalmoney}元"
+                    });
+                    txt8.Text = "";
+                }
+            }
+        }
+        private void ChangeResult(int nowresult)
+        {
+            txt1.Text = lastresult[nowresult][0];
+            txt2.Text = lastresult[nowresult][1];
+            txt3.Text = lastresult[nowresult][2];
+            txt4.Text = lastresult[nowresult][3];
+            txt5.Text = lastresult[nowresult][4];
+            txt6.Text = lastresult[nowresult][5];
+            txt7.Text = $"{nowresult+1}/{lastresult.Count}頁";
+        }
+
+
 
 
         private class Cars
@@ -290,5 +466,7 @@ namespace WeekTenHW
                 }
             },
         };
+
+
     }
 }

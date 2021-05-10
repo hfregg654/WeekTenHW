@@ -53,6 +53,12 @@ namespace WeekTenHW
             this.txt4 = new System.Windows.Forms.Label();
             this.txt5 = new System.Windows.Forms.Label();
             this.txt6 = new System.Windows.Forms.Label();
+            this.Nextbtn = new System.Windows.Forms.Button();
+            this.Topbtn = new System.Windows.Forms.Button();
+            this.Backbtn = new System.Windows.Forms.Button();
+            this.Lastbtn = new System.Windows.Forms.Button();
+            this.txt7 = new System.Windows.Forms.Label();
+            this.txt8 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -177,7 +183,6 @@ namespace WeekTenHW
             this.dateTimePicker1.TabIndex = 15;
             this.dateTimePicker1.Value = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
             this.dateTimePicker1.Visible = false;
-            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
             // 
             // label5
             // 
@@ -209,7 +214,6 @@ namespace WeekTenHW
             this.dateTimePicker2.TabIndex = 17;
             this.dateTimePicker2.Value = new System.DateTime(2021, 5, 8, 0, 0, 0, 0);
             this.dateTimePicker2.Visible = false;
-            this.dateTimePicker2.ValueChanged += new System.EventHandler(this.dateTimePicker2_ValueChanged);
             // 
             // comboBox1
             // 
@@ -231,14 +235,13 @@ namespace WeekTenHW
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(604, 33);
             this.comboBox2.TabIndex = 20;
-            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
             // Submitbtn
             // 
             this.Submitbtn.BackColor = System.Drawing.Color.MediumAquamarine;
             this.Submitbtn.Font = new System.Drawing.Font("新細明體", 20F);
             this.Submitbtn.ForeColor = System.Drawing.Color.White;
-            this.Submitbtn.Location = new System.Drawing.Point(425, 578);
+            this.Submitbtn.Location = new System.Drawing.Point(751, 578);
             this.Submitbtn.Name = "Submitbtn";
             this.Submitbtn.Size = new System.Drawing.Size(225, 50);
             this.Submitbtn.TabIndex = 21;
@@ -251,7 +254,7 @@ namespace WeekTenHW
             this.Cancelbtn.BackColor = System.Drawing.Color.MediumAquamarine;
             this.Cancelbtn.Font = new System.Drawing.Font("新細明體", 20F);
             this.Cancelbtn.ForeColor = System.Drawing.Color.White;
-            this.Cancelbtn.Location = new System.Drawing.Point(743, 578);
+            this.Cancelbtn.Location = new System.Drawing.Point(73, 578);
             this.Cancelbtn.Name = "Cancelbtn";
             this.Cancelbtn.Size = new System.Drawing.Size(225, 50);
             this.Cancelbtn.TabIndex = 22;
@@ -319,11 +322,89 @@ namespace WeekTenHW
             this.txt6.TabIndex = 28;
             this.txt6.Text = "應納稅額";
             // 
+            // Nextbtn
+            // 
+            this.Nextbtn.BackColor = System.Drawing.Color.MediumAquamarine;
+            this.Nextbtn.Font = new System.Drawing.Font("新細明體", 10F);
+            this.Nextbtn.ForeColor = System.Drawing.Color.White;
+            this.Nextbtn.Location = new System.Drawing.Point(560, 578);
+            this.Nextbtn.Name = "Nextbtn";
+            this.Nextbtn.Size = new System.Drawing.Size(50, 50);
+            this.Nextbtn.TabIndex = 32;
+            this.Nextbtn.Text = ">";
+            this.Nextbtn.UseVisualStyleBackColor = false;
+            this.Nextbtn.Click += new System.EventHandler(this.Nextbtn_Click);
+            // 
+            // Topbtn
+            // 
+            this.Topbtn.BackColor = System.Drawing.Color.MediumAquamarine;
+            this.Topbtn.Font = new System.Drawing.Font("新細明體", 10F);
+            this.Topbtn.ForeColor = System.Drawing.Color.White;
+            this.Topbtn.Location = new System.Drawing.Point(396, 578);
+            this.Topbtn.Name = "Topbtn";
+            this.Topbtn.Size = new System.Drawing.Size(50, 50);
+            this.Topbtn.TabIndex = 33;
+            this.Topbtn.Text = "<<";
+            this.Topbtn.UseVisualStyleBackColor = false;
+            this.Topbtn.Click += new System.EventHandler(this.Topbtn_Click);
+            // 
+            // Backbtn
+            // 
+            this.Backbtn.BackColor = System.Drawing.Color.MediumAquamarine;
+            this.Backbtn.Font = new System.Drawing.Font("新細明體", 10F);
+            this.Backbtn.ForeColor = System.Drawing.Color.White;
+            this.Backbtn.Location = new System.Drawing.Point(477, 578);
+            this.Backbtn.Name = "Backbtn";
+            this.Backbtn.Size = new System.Drawing.Size(50, 50);
+            this.Backbtn.TabIndex = 34;
+            this.Backbtn.Text = "<";
+            this.Backbtn.UseVisualStyleBackColor = false;
+            this.Backbtn.Click += new System.EventHandler(this.Backbtn_Click);
+            // 
+            // Lastbtn
+            // 
+            this.Lastbtn.BackColor = System.Drawing.Color.MediumAquamarine;
+            this.Lastbtn.Font = new System.Drawing.Font("新細明體", 10F);
+            this.Lastbtn.ForeColor = System.Drawing.Color.White;
+            this.Lastbtn.Location = new System.Drawing.Point(643, 578);
+            this.Lastbtn.Name = "Lastbtn";
+            this.Lastbtn.Size = new System.Drawing.Size(50, 50);
+            this.Lastbtn.TabIndex = 35;
+            this.Lastbtn.Text = ">>";
+            this.Lastbtn.UseVisualStyleBackColor = false;
+            this.Lastbtn.Click += new System.EventHandler(this.Lastbtn_Click);
+            // 
+            // txt7
+            // 
+            this.txt7.AutoSize = true;
+            this.txt7.Font = new System.Drawing.Font("新細明體", 15F);
+            this.txt7.Location = new System.Drawing.Point(870, 308);
+            this.txt7.Name = "txt7";
+            this.txt7.Size = new System.Drawing.Size(130, 25);
+            this.txt7.TabIndex = 36;
+            this.txt7.Text = "NOW/MAX";
+            // 
+            // txt8
+            // 
+            this.txt8.AutoSize = true;
+            this.txt8.Font = new System.Drawing.Font("新細明體", 15F);
+            this.txt8.Location = new System.Drawing.Point(746, 550);
+            this.txt8.Name = "txt8";
+            this.txt8.Size = new System.Drawing.Size(174, 25);
+            this.txt8.TabIndex = 37;
+            this.txt8.Text = "總稅額：共0元";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1018, 640);
+            this.Controls.Add(this.txt8);
+            this.Controls.Add(this.txt7);
+            this.Controls.Add(this.Lastbtn);
+            this.Controls.Add(this.Backbtn);
+            this.Controls.Add(this.Topbtn);
+            this.Controls.Add(this.Nextbtn);
             this.Controls.Add(this.txt6);
             this.Controls.Add(this.txt5);
             this.Controls.Add(this.txt4);
@@ -385,6 +466,12 @@ namespace WeekTenHW
         private System.Windows.Forms.Label txt4;
         private System.Windows.Forms.Label txt5;
         private System.Windows.Forms.Label txt6;
+        private System.Windows.Forms.Button Nextbtn;
+        private System.Windows.Forms.Button Topbtn;
+        private System.Windows.Forms.Button Backbtn;
+        private System.Windows.Forms.Button Lastbtn;
+        private System.Windows.Forms.Label txt7;
+        private System.Windows.Forms.Label txt8;
     }
 }
 
