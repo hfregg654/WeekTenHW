@@ -220,43 +220,81 @@ namespace WeekTenHW
             else
                 return tax * ((decimal)day / 365);
         }
+        //輸出表單的字典
+        Dictionary<int, List<string>> lastresult = new Dictionary<int, List<string>>();
+        //表單頁數
+        int resultnum = 0;
+        //將輸出結果加入字典
+        private void AddLastResult(int key, bool isfullyear, bool isfist, bool islast, DateTime year, DateTime? year2, int day, int yearday, out decimal totalmoney)
+        {
+            totalmoney = 0;
+            if (isfullyear)
+            {
+                lastresult.Add(key, new List<string>() {
+                    $"使用期間：{year.Year}-01-01~{year.Year}-12-31",
+                    $"計算天數：{yearday}天",
+                    $"汽缸CC數：{comboBox2.SelectedItem}",
+                    $"用途：{comboBox1.SelectedItem}",
+                    $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, day, yearday, out totalmoney)}",
+                    $"應納稅額：共{Math.Floor(totalmoney)}元"
+                });
+            }
+            if (isfist)
+            {
+                lastresult.Add(key, new List<string>() {
+                    $"使用期間：{year.ToString("yyyy-MM-dd")}~{year.Year}-12-31",
+                    $"計算天數：{day}天",
+                    $"汽缸CC數：{comboBox2.SelectedItem}",
+                    $"用途：{comboBox1.SelectedItem}",
+                    $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, day, yearday, out totalmoney)}",
+                    $"應納稅額：共{Math.Floor(totalmoney)}元"
+                });
+            }
+            if (islast)
+            {
+                lastresult.Add(key, new List<string>() {
+                    $"使用期間：{year.Year}-01-01~{year.ToString("yyyy-MM-dd")}",
+                    $"計算天數：{day}天",
+                    $"汽缸CC數：{comboBox2.SelectedItem}",
+                    $"用途：{comboBox1.SelectedItem}",
+                    $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, day, yearday, out totalmoney)}",
+                    $"應納稅額：共{Math.Floor(totalmoney)}元"
+                });
+            }
+            if (year2 != null)
+            {
+                lastresult.Add(0, new List<string>() {
+                    $"使用期間：{year.ToString("yyyy-MM-dd")}~{Convert.ToDateTime(year2).ToString("yyyy-MM-dd")}",
+                    $"計算天數：{day}天",
+                    $"汽缸CC數：{comboBox2.SelectedItem}",
+                    $"用途：{comboBox1.SelectedItem}",
+                    $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, day, yearday, out totalmoney)}",
+                    $"應納稅額：共{Math.Floor(totalmoney)}元"
+                });
+            }
+        }
         //最後的輸出表單
         private void LastResult()
         {
             //清空字典及頁數歸零
             lastresult.Clear();
             resultnum = 0;
-            //一年的總額
-            decimal totalmoney;
             //選擇當年的話只計算當年份
             if (radioButton1.Checked)
             {
                 //取得當年的西元年,並多取一個數字型別的
-                string nowyear = DateTime.Now.ToString("yyyy");
-                int nowyearint = Convert.ToInt32(nowyear);
+                DateTime nowyeartime = DateTime.Now;
+                int nowyear = nowyeartime.Year;
+                decimal totalmoney;
                 //判斷是否為閏年,並將結果加入字典
-                if (nowyearint % 4 == 0)
+                if (DateTime.IsLeapYear(nowyear))
                 {
-                    lastresult.Add(0, new List<string>() {
-                        $"使用期間：{nowyear}-01-01~{nowyear}-12-31",
-                        $"計算天數：366天",
-                        $"汽缸CC數：{comboBox2.SelectedItem}",
-                        $"用途：{comboBox1.SelectedItem}",
-                        $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 366, 366, out totalmoney)}",
-                        $"應納稅額：共{Math.Floor(totalmoney)}元"
-                    });
+                    AddLastResult(0, true, false, false, nowyeartime, null, 366, 366, out totalmoney);
                     txt8.Text = "";
                 }
                 else
                 {
-                    lastresult.Add(0, new List<string>() {
-                        $"使用期間：{nowyear}-01-01~{nowyear}-12-31",
-                        $"計算天數：365天",
-                        $"汽缸CC數：{comboBox2.SelectedItem}",
-                        $"用途：{comboBox1.SelectedItem}",
-                        $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 365, 365, out totalmoney)}",
-                        $"應納稅額：共{Math.Floor(totalmoney)}元"
-                    });
+                    AddLastResult(0, true, false, false, nowyeartime, null, 365, 365, out totalmoney);
                     txt8.Text = "";
                 }
 
@@ -272,7 +310,7 @@ namespace WeekTenHW
                     TimeSpan ts = new TimeSpan(dateTimePicker2.Value.Ticks - dateTimePicker1.Value.Ticks);
                     int totaldays = (int)ts.TotalDays + 1;
                     //傳入創造表單的函式並帶回結果
-                    CreateResult(dateTimePicker1.Value.ToString("yyyy-MM-dd"), dateTimePicker2.Value.ToString("yyyy-MM-dd"), totaldays, out fulltotalmoney);
+                    CreateResult(dateTimePicker1.Value, dateTimePicker2.Value, totaldays, out fulltotalmoney);
                     if (fulltotalmoney != 0)
                         txt8.Text = $"全部應納稅額：共{Math.Floor(fulltotalmoney)}元";
 
@@ -281,168 +319,91 @@ namespace WeekTenHW
                 {
                     TimeSpan ts = new TimeSpan(dateTimePicker1.Value.Ticks - dateTimePicker2.Value.Ticks);
                     int totaldays = (int)ts.TotalDays + 1;
-                    CreateResult(dateTimePicker2.Value.ToString("yyyy-MM-dd"), dateTimePicker1.Value.ToString("yyyy-MM-dd"), totaldays, out fulltotalmoney);
+                    CreateResult(dateTimePicker2.Value, dateTimePicker1.Value, totaldays, out fulltotalmoney);
                     if (fulltotalmoney != 0)
                         txt8.Text = $"全部應納稅額：共{Math.Floor(fulltotalmoney)}元";
                 }
 
             }
         }
-        //輸出表單的字典
-        Dictionary<int, List<string>> lastresult = new Dictionary<int, List<string>>();
-        //表單頁數
-        int resultnum = 0;
         //創造表單(選取的範圍)
-        private void CreateResult(string yearA, string yearB, int totaldays, out decimal fulltotalmoney)
+        private void CreateResult(DateTime smallyear, DateTime bigyear, int totaldays, out decimal fulltotalmoney)
         {
             //先將總額設定為0
             fulltotalmoney = 0;
             decimal totalmoney;
-            //接取選取的頭尾年
-            List<int> years = new List<int>();
-            //接取選取的所有年
-            List<int> fullyears = new List<int>();
-            //選取的頭年
-            int smallyear = Convert.ToInt32(Convert.ToDateTime(yearA).ToString("yyyy"));
-            //選取的尾年
-            int bigyear = Convert.ToInt32(Convert.ToDateTime(yearB).ToString("yyyy"));
             //頭尾年相減獲得中間有幾年
-            int totalyear = bigyear - smallyear;
+            int totalyear = bigyear.Year - smallyear.Year;
             //判斷是否在同一年中,不是就進入計算,在同一年則直接計算
             if (totalyear > 0)
             {
-                //將頭尾年及所有年各別放入相應集合中
-                for (int i = smallyear; i <= bigyear; i++)
-                {
-                    if (i == smallyear || i == bigyear)
-                        years.Add(i);
-                    fullyears.Add(i);
-                }
                 //跑所有年份次數的迴圈
-                for (int i = 0; i < fullyears.Count; i++)
+                for (int i = smallyear.Year; i <= bigyear.Year; i++)
                 {
                     //頭年的情況
-                    if (fullyears[i] == years[0])
+                    if (i == smallyear.Year)
                     {
                         //計算所選日期到頭年的12月31日的天數
-                        TimeSpan ts = new TimeSpan(Convert.ToDateTime($"{smallyear}-12-31").Ticks - Convert.ToDateTime(yearA).Ticks);
+                        TimeSpan ts = new TimeSpan(Convert.ToDateTime($"{smallyear.Year}-12-31").Ticks - smallyear.Ticks);
                         int thistotaldays = (int)ts.TotalDays + 1;
                         //判斷閏年
-                        if (fullyears[i] % 4 == 0)
+                        if (DateTime.IsLeapYear(i))
                         {
-                            lastresult.Add(i, new List<string>() {
-                                $"使用期間：{yearA}~{fullyears[i]}-12-31",
-                                $"計算天數：{thistotaldays}天",
-                                $"汽缸CC數：{comboBox2.SelectedItem}",
-                                $"用途：{comboBox1.SelectedItem}",
-                                $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 366, out totalmoney)}",
-                                $"應納稅額：共{Math.Floor(totalmoney)}元"
-                            });
+                            AddLastResult(i - smallyear.Year, false, true, false, smallyear, null, thistotaldays, 366, out totalmoney);
                             //將總額加上計算結果
                             fulltotalmoney += totalmoney;
                         }
                         else
                         {
-                            lastresult.Add(i, new List<string>() {
-                                $"使用期間：{yearA}~{fullyears[i]}-12-31",
-                                $"計算天數：{thistotaldays}天",
-                                $"汽缸CC數：{comboBox2.SelectedItem}",
-                                $"用途：{comboBox1.SelectedItem}",
-                                $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 365, out totalmoney)}",
-                                $"應納稅額：共{Math.Floor(totalmoney)}元"
-                            });
+                            AddLastResult(i - smallyear.Year, false, true, false, smallyear, null, thistotaldays, 365, out totalmoney);
                             fulltotalmoney += totalmoney;
                         }
                     }
                     //尾年的情況
-                    else if (fullyears[i] == years[1])
+                    else if (i == bigyear.Year)
                     {
                         //計算尾年的1月1日到所選日期的天數
-                        TimeSpan ts = new TimeSpan(Convert.ToDateTime(yearB).Ticks - Convert.ToDateTime($"{bigyear}-01-01").Ticks);
+                        TimeSpan ts = new TimeSpan(Convert.ToDateTime(bigyear).Ticks - Convert.ToDateTime($"{bigyear.Year}-01-01").Ticks);
                         int thistotaldays = (int)ts.TotalDays + 1;
-                        if (fullyears[i] % 4 == 0)
+                        if (DateTime.IsLeapYear(i))
                         {
-                            lastresult.Add(i, new List<string>() {
-                                $"使用期間：{fullyears[i]}-01-01~{yearB}",
-                                $"計算天數：{thistotaldays}天",
-                                $"汽缸CC數：{comboBox2.SelectedItem}",
-                                $"用途：{comboBox1.SelectedItem}",
-                                $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 366, out totalmoney)}",
-                                $"應納稅額：共{Math.Floor(totalmoney)}元"
-                            });
+                            AddLastResult(i - smallyear.Year, false, false, true, bigyear, null, thistotaldays, 366, out totalmoney);
                             fulltotalmoney += totalmoney;
                         }
                         else
                         {
-                            lastresult.Add(i, new List<string>() {
-                                $"使用期間：{fullyears[i]}-01-01~{yearB}",
-                                $"計算天數：{thistotaldays}天",
-                                $"汽缸CC數：{comboBox2.SelectedItem}",
-                                $"用途：{comboBox1.SelectedItem}",
-                                $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, thistotaldays, 365, out totalmoney)}",
-                                $"應納稅額：共{Math.Floor(totalmoney)}元"
-                            });
+                            AddLastResult(i - smallyear.Year, false, false, true, bigyear, null, thistotaldays, 365, out totalmoney);
                             fulltotalmoney += totalmoney;
                         }
                     }
                     //中間年的情況
                     else
                     {
-                        if (fullyears[i] % 4 == 0)
+                        if (DateTime.IsLeapYear(i))
                         {
-                            lastresult.Add(i, new List<string>() {
-                                $"使用期間：{fullyears[i]}-01-01~{fullyears[i]}-12-31",
-                                $"計算天數：366天",
-                                $"汽缸CC數：{comboBox2.SelectedItem}",
-                                $"用途：{comboBox1.SelectedItem}",
-                                $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 366, 366, out totalmoney)}",
-                                $"應納稅額：共{Math.Floor(totalmoney)}元"
-                            });
+                            AddLastResult(i - smallyear.Year, true, false, false, new DateTime(i, 1, 1),null, 366, 366, out totalmoney);
                             fulltotalmoney += totalmoney;
                         }
                         else
                         {
-                            lastresult.Add(i, new List<string>() {
-                                $"使用期間：{fullyears[i]}-01-01~{fullyears[i]}-12-31",
-                                $"計算天數：365天",
-                                $"汽缸CC數：{comboBox2.SelectedItem}",
-                                $"用途：{comboBox1.SelectedItem}",
-                                $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, 365, 365, out totalmoney)}",
-                                $"應納稅額：共{Math.Floor(totalmoney)}元"
-                            });
+                            AddLastResult(i - smallyear.Year, true, false, false, new DateTime(i, 1, 1),null, 365, 365, out totalmoney);
                             fulltotalmoney += totalmoney;
                         }
                     }
-
                 }
-
             }
             //判斷是否在同一年中,不是就進入計算,在同一年則直接計算
             else
             {
                 //判斷閏年
-                if (smallyear % 4 == 0 || bigyear % 4 == 0)
+                if (DateTime.IsLeapYear(smallyear.Year) || DateTime.IsLeapYear(bigyear.Year))
                 {
-                    lastresult.Add(0, new List<string>() {
-                        $"使用期間：{yearA}~{yearB}",
-                        $"計算天數：{totaldays}天",
-                        $"汽缸CC數：{comboBox2.SelectedItem}",
-                        $"用途：{comboBox1.SelectedItem}",
-                        $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, totaldays, 366, out totalmoney)}",
-                        $"應納稅額：共{Math.Floor(totalmoney)}元"
-                    });
+                    AddLastResult(0, false, false, false, smallyear, bigyear, totaldays, 366, out totalmoney);
                     txt8.Text = "";
                 }
                 else
                 {
-                    lastresult.Add(0, new List<string>() {
-                        $"使用期間：{yearA}~{yearB}",
-                        $"計算天數：{totaldays}天",
-                        $"汽缸CC數：{comboBox2.SelectedItem}",
-                        $"用途：{comboBox1.SelectedItem}",
-                        $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, totaldays, 365, out totalmoney)}",
-                        $"應納稅額：共{Math.Floor(totalmoney)}元"
-                    });
+                    AddLastResult(0, false, false, false, smallyear, bigyear, totaldays, 365, out totalmoney);
                     txt8.Text = "";
                 }
             }
@@ -459,7 +420,6 @@ namespace WeekTenHW
             txt6.Text = lastresult[nowresult][5];
             txt7.Text = $"{nowresult + 1}/{lastresult.Count}頁";
         }
-
 
 
         //假資料集合部分
