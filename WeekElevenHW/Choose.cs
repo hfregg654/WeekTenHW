@@ -10,22 +10,31 @@ using System.Windows.Forms;
 
 namespace WeekElevenHW
 {
-    public partial class Form1 : Form
+    public partial class Choose : Form
     {
-        public Form1()
+        public Choose()
         {
             InitializeComponent();
         }
-        //初始化
-        private void Form1_Load(object sender, EventArgs e)
+        public MainForm main = null;
+        private void ChooseDate_Load(object sender, EventArgs e)
         {
-            Reset();
+            radioButton1.Select();
+            ChangeRadio(false);
+            comboBox1.Items.Clear();
+            foreach (var item in _cars)
+            {
+                comboBox1.Items.Add(item.CarName);
+            }
+            comboBox1.SelectedIndex = 0;
+            SelectCC();
         }
         //換選項
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             ChangeRadio(false);
         }
+
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
             ChangeRadio(true);
@@ -35,125 +44,7 @@ namespace WeekElevenHW
         {
             SelectCC();
         }
-        //送出表單顯示結果
-        private void Submitbtn_Click(object sender, EventArgs e)
-        {
-            LastResult();
-            ChangeResult(resultnum);
-        }
-        //初始化
-        private void Cancelbtn_Click(object sender, EventArgs e)
-        {
-            Reset();
-        }
-        //跳到第一筆結果
-        private void Topbtn_Click(object sender, EventArgs e)
-        {
-            resultnum = 0;
-            ChangeResult(resultnum);
-        }
-        //往前一筆結果
-        private void Backbtn_Click(object sender, EventArgs e)
-        {
-            resultnum--;
-            if (resultnum < 0)
-                resultnum = 0;
-            ChangeResult(resultnum);
-        }
-        //往後一筆結果
-        private void Nextbtn_Click(object sender, EventArgs e)
-        {
-            resultnum++;
-            if (resultnum > lastresult.Count - 1)
-                resultnum = lastresult.Count - 1;
-            ChangeResult(resultnum);
-        }
-        //跳到最後一筆結果
-        private void Lastbtn_Click(object sender, EventArgs e)
-        {
-            resultnum = lastresult.Count - 1;
-            ChangeResult(resultnum);
-        }
-        //長按下一筆結果時能連續下一筆 Timer
-        private void Nextbtn_MouseDown(object sender, MouseEventArgs e)
-        {
-            timerNEXT.Start();
-        }
-        private void Nextbtn_MouseUp(object sender, MouseEventArgs e)
-        {
-            timerNEXT.Stop();
-            timerNEXT.Interval = 1000;
-        }
-        private void timerNEXT_Tick(object sender, EventArgs e)
-        {
 
-            if (timerNEXT.Interval - 100 <= 100)
-            {
-                if (timerNEXT.Interval - 10 <= 10)
-                {
-                    timerNEXT.Interval = 10;
-                }
-                else
-                    timerNEXT.Interval -= 10;
-            }
-            else
-                timerNEXT.Interval -= 100;
-
-            resultnum++;
-            if (resultnum > lastresult.Count - 1)
-                resultnum = lastresult.Count - 1;
-            ChangeResult(resultnum);
-        }
-        //長按上一筆結果時能連續上一筆 Timer
-        private void Backbtn_MouseDown(object sender, MouseEventArgs e)
-        {
-            timerBACK.Start();
-        }
-        private void Backbtn_MouseUp(object sender, MouseEventArgs e)
-        {
-            timerBACK.Stop();
-            timerBACK.Interval = 1000;
-        }
-        private void timerBACK_Tick(object sender, EventArgs e)
-        {
-            if (timerBACK.Interval - 100 <= 100)
-            {
-                if (timerBACK.Interval - 10 <= 10)
-                {
-                    timerBACK.Interval = 10;
-                }
-                else
-                    timerBACK.Interval -= 10;
-            }
-            else
-                timerBACK.Interval -= 100;
-
-            resultnum--;
-            if (resultnum < 0)
-                resultnum = 0;
-            ChangeResult(resultnum);
-        }
-        //初始化方法
-        private void Reset()
-        {
-            //重製選項及欄位,並重新將假資料填入以及清空結果
-            radioButton1.Select();
-            comboBox1.Items.Clear();
-            foreach (var item in _cars)
-            {
-                comboBox1.Items.Add(item.CarName);
-            }
-            comboBox1.SelectedIndex = 0;
-            SelectCC();
-            txt1.Text = "";
-            txt2.Text = "";
-            txt3.Text = "";
-            txt4.Text = "";
-            txt5.Text = "";
-            txt6.Text = "";
-            txt7.Text = "";
-            txt8.Text = "";
-        }
         //天數選項交換
         private void ChangeRadio(bool change)
         {
@@ -191,6 +82,64 @@ namespace WeekElevenHW
             }
             comboBox2.SelectedIndex = 0;
         }
+        //將輸出結果加入字典
+        private void AddLastResult(int key, bool isfullyear, bool isfist, bool islast, DateTime year, DateTime? year2, int day, int yearday, out decimal totalmoney)
+        {
+            totalmoney = 0;
+            if (isfullyear)
+            {
+                main.lastresult.Add(key, new List<string>() {
+                    $"使用期間：{year.Year}-01-01~{year.Year}-12-31",
+                    $"計算天數：{yearday}天",
+                    $"汽缸CC數：{comboBox2.SelectedItem}",
+                    $"用途：{comboBox1.SelectedItem}",
+                    $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, day, yearday, out totalmoney)}",
+                    $"應納稅額：共{Math.Floor(totalmoney)}元"
+                });
+            }
+            if (isfist)
+            {
+                main.lastresult.Add(key, new List<string>() {
+                    $"使用期間：{year.ToString("yyyy-MM-dd")}~{year.Year}-12-31",
+                    $"計算天數：{day}天",
+                    $"汽缸CC數：{comboBox2.SelectedItem}",
+                    $"用途：{comboBox1.SelectedItem}",
+                    $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, day, yearday, out totalmoney)}",
+                    $"應納稅額：共{Math.Floor(totalmoney)}元"
+                });
+            }
+            if (islast)
+            {
+                main.lastresult.Add(key, new List<string>() {
+                    $"使用期間：{year.Year}-01-01~{year.ToString("yyyy-MM-dd")}",
+                    $"計算天數：{day}天",
+                    $"汽缸CC數：{comboBox2.SelectedItem}",
+                    $"用途：{comboBox1.SelectedItem}",
+                    $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, day, yearday, out totalmoney)}",
+                    $"應納稅額：共{Math.Floor(totalmoney)}元"
+                });
+            }
+            if (year2 != null)
+            {
+                main.lastresult.Add(0, new List<string>() {
+                    $"使用期間：{year.ToString("yyyy-MM-dd")}~{Convert.ToDateTime(year2).ToString("yyyy-MM-dd")}",
+                    $"計算天數：{day}天",
+                    $"汽缸CC數：{comboBox2.SelectedItem}",
+                    $"用途：{comboBox1.SelectedItem}",
+                    $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, day, yearday, out totalmoney)}",
+                    $"應納稅額：共{Math.Floor(totalmoney)}元"
+                });
+            }
+        }
+        //計算公式
+        private decimal TotalMoney(int tax, int day, int year)
+        {
+            //閏年除以366反之則除以365
+            if (year == 366)
+                return tax * ((decimal)day / 366);
+            else
+                return tax * ((decimal)day / 365);
+        }
         //取得計算公式以及計算結果
         private string Cacu(string cartype, string carcc, int day, int year, out decimal totalmoney)
         {
@@ -211,74 +160,12 @@ namespace WeekElevenHW
             return $"{tax.Tax} × {day} / {year} = {Math.Floor(totalmoney)}元";
 
         }
-        //計算公式
-        private decimal TotalMoney(int tax, int day, int year)
-        {
-            //閏年除以366反之則除以365
-            if (year == 366)
-                return tax * ((decimal)day / 366);
-            else
-                return tax * ((decimal)day / 365);
-        }
-        //輸出表單的字典
-        Dictionary<int, List<string>> lastresult = new Dictionary<int, List<string>>();
-        //表單頁數
-        int resultnum = 0;
-        //將輸出結果加入字典
-        private void AddLastResult(int key, bool isfullyear, bool isfist, bool islast, DateTime year, DateTime? year2, int day, int yearday, out decimal totalmoney)
-        {
-            totalmoney = 0;
-            if (isfullyear)
-            {
-                lastresult.Add(key, new List<string>() {
-                    $"使用期間：{year.Year}-01-01~{year.Year}-12-31",
-                    $"計算天數：{yearday}天",
-                    $"汽缸CC數：{comboBox2.SelectedItem}",
-                    $"用途：{comboBox1.SelectedItem}",
-                    $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, day, yearday, out totalmoney)}",
-                    $"應納稅額：共{Math.Floor(totalmoney)}元"
-                });
-            }
-            if (isfist)
-            {
-                lastresult.Add(key, new List<string>() {
-                    $"使用期間：{year.ToString("yyyy-MM-dd")}~{year.Year}-12-31",
-                    $"計算天數：{day}天",
-                    $"汽缸CC數：{comboBox2.SelectedItem}",
-                    $"用途：{comboBox1.SelectedItem}",
-                    $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, day, yearday, out totalmoney)}",
-                    $"應納稅額：共{Math.Floor(totalmoney)}元"
-                });
-            }
-            if (islast)
-            {
-                lastresult.Add(key, new List<string>() {
-                    $"使用期間：{year.Year}-01-01~{year.ToString("yyyy-MM-dd")}",
-                    $"計算天數：{day}天",
-                    $"汽缸CC數：{comboBox2.SelectedItem}",
-                    $"用途：{comboBox1.SelectedItem}",
-                    $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, day, yearday, out totalmoney)}",
-                    $"應納稅額：共{Math.Floor(totalmoney)}元"
-                });
-            }
-            if (year2 != null)
-            {
-                lastresult.Add(0, new List<string>() {
-                    $"使用期間：{year.ToString("yyyy-MM-dd")}~{Convert.ToDateTime(year2).ToString("yyyy-MM-dd")}",
-                    $"計算天數：{day}天",
-                    $"汽缸CC數：{comboBox2.SelectedItem}",
-                    $"用途：{comboBox1.SelectedItem}",
-                    $"計算公式：{Cacu(comboBox1.SelectedItem as string, comboBox2.SelectedItem as string, day, yearday, out totalmoney)}",
-                    $"應納稅額：共{Math.Floor(totalmoney)}元"
-                });
-            }
-        }
         //最後的輸出表單
         private void LastResult()
         {
             //清空字典及頁數歸零
-            lastresult.Clear();
-            resultnum = 0;
+            main.lastresult.Clear();
+            main.resultnum = 0;
             //選擇當年的話只計算當年份
             if (radioButton1.Checked)
             {
@@ -290,21 +177,23 @@ namespace WeekElevenHW
                 if (DateTime.IsLeapYear(nowyear))
                 {
                     AddLastResult(0, true, false, false, nowyeartime, null, 366, 366, out totalmoney);
-                    txt8.Text = "";
+                    main.ALLTotalmoney.Text = "";
+                    main.lastresult.Add(main.lastresult.Count, new List<string>() { "-", "-", "-", "-", "-", "-" });
                 }
                 else
                 {
                     AddLastResult(0, true, false, false, nowyeartime, null, 365, 365, out totalmoney);
-                    txt8.Text = "";
+                    main.ALLTotalmoney.Text = "";
+                    main.lastresult.Add(main.lastresult.Count, new List<string>() { "-", "-", "-", "-", "-", "-" });
                 }
 
             }
             else
             {
                 //所有年份的總額
-                decimal fulltotalmoney;
+                decimal fulltotalmoney = 0;
                 //判斷兩個日期的大小
-                if (dateTimePicker1.Value < dateTimePicker2.Value)
+                if (dateTimePicker2.Value > dateTimePicker1.Value)
                 {
                     //計算選取範圍內的總天數
                     TimeSpan ts = new TimeSpan(dateTimePicker2.Value.Ticks - dateTimePicker1.Value.Ticks);
@@ -312,18 +201,24 @@ namespace WeekElevenHW
                     //傳入創造表單的函式並帶回結果
                     CreateResult(dateTimePicker1.Value, dateTimePicker2.Value, totaldays, out fulltotalmoney);
                     if (fulltotalmoney != 0)
-                        txt8.Text = $"全部應納稅額：共{Math.Floor(fulltotalmoney)}元";
-
+                    {
+                        main.ALLTotalmoney.Text = $"全部應納稅額：共{Math.Floor(fulltotalmoney)}元";
+                        main.lastresult.Add(main.lastresult.Count, new List<string>() { "-", "-", "-", "-", "-", $"全部應納稅額：共{Math.Floor(fulltotalmoney)}元" });
+                    }
                 }
                 else
                 {
+                    //計算選取範圍內的總天數
                     TimeSpan ts = new TimeSpan(dateTimePicker1.Value.Ticks - dateTimePicker2.Value.Ticks);
                     int totaldays = (int)ts.TotalDays + 1;
+                    //傳入創造表單的函式並帶回結果
                     CreateResult(dateTimePicker2.Value, dateTimePicker1.Value, totaldays, out fulltotalmoney);
                     if (fulltotalmoney != 0)
-                        txt8.Text = $"全部應納稅額：共{Math.Floor(fulltotalmoney)}元";
+                    {
+                        main.ALLTotalmoney.Text = $"全部應納稅額：共{Math.Floor(fulltotalmoney)}元";
+                        main.lastresult.Add(main.lastresult.Count, new List<string>() { "-", "-", "-", "-", "-", $"全部應納稅額：共{Math.Floor(fulltotalmoney)}元" });
+                    }
                 }
-
             }
         }
         //創造表單(選取的範圍)
@@ -381,12 +276,12 @@ namespace WeekElevenHW
                     {
                         if (DateTime.IsLeapYear(i))
                         {
-                            AddLastResult(i - smallyear.Year, true, false, false, new DateTime(i, 1, 1),null, 366, 366, out totalmoney);
+                            AddLastResult(i - smallyear.Year, true, false, false, new DateTime(i, 1, 1), null, 366, 366, out totalmoney);
                             fulltotalmoney += totalmoney;
                         }
                         else
                         {
-                            AddLastResult(i - smallyear.Year, true, false, false, new DateTime(i, 1, 1),null, 365, 365, out totalmoney);
+                            AddLastResult(i - smallyear.Year, true, false, false, new DateTime(i, 1, 1), null, 365, 365, out totalmoney);
                             fulltotalmoney += totalmoney;
                         }
                     }
@@ -399,27 +294,53 @@ namespace WeekElevenHW
                 if (DateTime.IsLeapYear(smallyear.Year) || DateTime.IsLeapYear(bigyear.Year))
                 {
                     AddLastResult(0, false, false, false, smallyear, bigyear, totaldays, 366, out totalmoney);
-                    txt8.Text = "";
+                    main.ALLTotalmoney.Text = "";
+                    main.lastresult.Add(main.lastresult.Count, new List<string>() { "-", "-", "-", "-", "-", "-" });
                 }
                 else
                 {
                     AddLastResult(0, false, false, false, smallyear, bigyear, totaldays, 365, out totalmoney);
-                    txt8.Text = "";
+                    main.ALLTotalmoney.Text = "";
+                    main.lastresult.Add(main.lastresult.Count, new List<string>() { "-", "-", "-", "-", "-", "-" });
                 }
             }
         }
-        //輸出結果換頁
-        private void ChangeResult(int nowresult)
+
+
+
+
+        private void Submitbtn_Click(object sender, EventArgs e)
         {
-            //將label改為當前頁數字典中的結果
-            txt1.Text = lastresult[nowresult][0];
-            txt2.Text = lastresult[nowresult][1];
-            txt3.Text = lastresult[nowresult][2];
-            txt4.Text = lastresult[nowresult][3];
-            txt5.Text = lastresult[nowresult][4];
-            txt6.Text = lastresult[nowresult][5];
-            txt7.Text = $"{nowresult + 1}/{lastresult.Count}頁";
+            int nowyear = DateTime.Now.Year;
+            main.CarType.Text = comboBox1.Text;
+            main.CarCC.Text = comboBox2.Text;
+            if (radioButton1.Checked)
+            {
+                LastResult();
+                main.ChangeResult(0);
+                main.ChooseDate.Text = $"{nowyear}-01-01~{nowyear}-12-31";
+            }
+            else
+            {
+                if (dateTimePicker2.Value > dateTimePicker1.Value)
+                {
+                    LastResult();
+                    main.ChangeResult(0);
+                    main.ChooseDate.Text = $"{dateTimePicker1.Value.ToString("yyyy-MM-dd")}~{dateTimePicker2.Value.ToString("yyyy-MM-dd")}";
+
+                }
+                else
+                {
+                    LastResult();
+                    main.ChangeResult(0);
+                    main.ChooseDate.Text = $"{dateTimePicker2.Value.ToString("yyyy-MM-dd")}~{dateTimePicker1.Value.ToString("yyyy-MM-dd")}";
+                }
+            }
+            Close();
         }
+
+
+
 
 
         //假資料集合部分
@@ -534,9 +455,6 @@ namespace WeekElevenHW
                 }
             },
         };
-
-
-
 
 
     }
